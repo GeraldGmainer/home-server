@@ -16,44 +16,60 @@ pages:
                 url: http://192.168.178.10:8081/admin
                 icon: si:pihole
                 alt-status-codes: [403]
+
               - title: Vaultwarden
                 url: https://beelink.vault
                 icon: si:vaultwarden
                 insecure: true
-                expected-status-code: 200
-                expected-content: "Vaultwarden"
+                check-url: https://192.168.178.10
+
               - title: Wiki.js
                 url: https://beelink.wiki
                 icon: si:wikipedia
                 insecure: true
+                check-url: http://192.168.178.10:3001
+
               - title: Immich
                 url: https://beelink.immich
                 icon: si:immich
                 insecure: true
+                check-url: http://192.168.178.10:2283
+
               - title: Nextcloud
                 url: https://beelink.nas
                 icon: si:nextcloud
                 insecure: true
+                check-url: http://192.168.178.10:8082
+
               - title: Grafana
                 url: https://beelink.grafana
                 icon: si:grafana
                 insecure: true
+                check-url: http://192.168.178.10:3000
+
               - title: Prometheus
                 url: https://beelink.prometheus
                 icon: si:prometheus
                 insecure: true
+                check-url: http://192.168.178.10:9090
+
               - title: Portainer
                 url: https://beelink.portainer
                 icon: si:portainer
                 insecure: true
+                check-url: http://192.168.178.10:9000
+
               - title: Glances
                 url: https://beelink.glances
                 icon: si:glances
                 insecure: true
+                check-url: http://192.168.178.10:61208
+
               - title: Homepage
                 url: https://beelink.homepage
                 icon: si:homeassistant
                 insecure: true
+                check-url: http://192.168.178.10:3005
 
 
       - size: small
@@ -62,7 +78,7 @@ pages:
             title: Pi-hole stats
             service: pihole-v6
             url: http://192.168.178.10:8081
-            password: ${PIHOLE_WEBPASSWORD}
+            password: 1234
             hour-format: 24h
           - type: server-stats
             title: Server stats

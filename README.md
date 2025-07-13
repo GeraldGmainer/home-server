@@ -55,7 +55,7 @@ PIHOLE_WEBPASSWORD=your_pihole_password
 VAULTWARDEN_ADMIN_TOKEN=your_vaultwarden_admin_token
 ```
 
-3️⃣ (Optional) Edit Caddyfile to set your domains.
+3️⃣ Edit Caddyfile to set your domains.
 
 4️⃣ Start everything:
 
