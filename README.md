@@ -20,13 +20,13 @@ It includes:
 
 ## Features
 
-✅ Reverse proxy with HTTPS (via Caddy)  
-✅ Easy service discovery and dashboard (via Glance)  
-✅ Monitoring and metrics (Prometheus, Grafana, Node Exporter, cAdvisor)  
-✅ Self-hosted password vault (Vaultwarden)  
-✅ Network-wide DNS blocking (Pi-hole)  
-✅ Photo management (Immich)  
-✅ Personal cloud (Nextcloud)  
+✅ Reverse proxy with HTTPS (via Caddy)
+✅ Easy service discovery and dashboard (via Glance)
+✅ Monitoring and metrics (Prometheus, Grafana, Node Exporter, cAdvisor)
+✅ Self-hosted password vault (Vaultwarden)
+✅ Network-wide DNS blocking (Pi-hole)
+✅ Photo management (Immich)
+✅ Personal cloud (Nextcloud)
 ✅ Container management (Portainer)
 
 ---
@@ -44,11 +44,12 @@ It includes:
 1️⃣ Clone this repo:
 
 ```bash
-git clone https://github.com/YOURUSERNAME/home-server.git
+git clone https://github.com/GeraldGmainer/home-server.git
 cd home-server
 ```
 
 2️⃣ Create your .env file with secrets:
+
 ```bash
 PIHOLE_WEBPASSWORD=your_pihole_password
 VAULTWARDEN_ADMIN_TOKEN=your_vaultwarden_admin_token
@@ -57,6 +58,7 @@ VAULTWARDEN_ADMIN_TOKEN=your_vaultwarden_admin_token
 3️⃣ (Optional) Edit Caddyfile to set your domains.
 
 4️⃣ Start everything:
+
 ```bash
 docker compose up -d
 ```
@@ -64,21 +66,25 @@ docker compose up -d
 🚀 Managing your stack
 
 - Start:
+
 ```bash
 docker compose up -d
 ```
 
 - Stop:
+
 ```bash
 docker compose down
 ```
 
 - View logs:
+
 ```bash
 docker compose logs -f
 ```
 
 🖥️ Access your services
+
 - Pi-hole: http://YOUR_IP:8081/admin
 - Portainer: http://YOUR_IP:9000
 - Grafana: http://YOUR_IP:3000
@@ -115,7 +121,3 @@ Your central homelab dashboard with:
 - Pi-hole stats
 
 Configure in glance/glance.yml.
-
-
-
-
