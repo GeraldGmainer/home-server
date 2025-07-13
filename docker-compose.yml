@@ -18,18 +18,21 @@ services:
     volumes:
       - pihole_data:/etc/pihole
       - dnsmasq_data:/etc/dnsmasq.d
-  
+
   caddy:
     image: caddy:2
     container_name: caddy
     restart: unless-stopped
     ports:
-      - "80:80"      # HTTP → Caddy
-      - "443:443"    # HTTPS → Caddy
+      - "80:80"
+      - "443:443"
     volumes:
       - caddy_data:/data
       - caddy_config:/config
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    networks:
+      - monitoring
+      - default
     depends_on:
       - vaultwarden
       - wikijs
@@ -40,9 +43,9 @@ services:
   vaultwarden:
     image: vaultwarden/server:latest
     container_name: vaultwarden
+    restart: unless-stopped
     environment:
       - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
-    restart: unless-stopped
     volumes:
       - vaultwarden_data:/data
 
@@ -124,7 +127,7 @@ services:
     container_name: immich_redis
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD","redis-cli","ping"]
       interval: 30s
       timeout: 5s
       retries: 5
@@ -137,7 +140,7 @@ services:
       - "8082:80"
     volumes:
       - nextcloud_data:/var/www/html
-      - nextcloud_storage:/var/www/html/data
+      - /mnt/media:/external_media
     environment:
       - MYSQL_HOST=nextcloud_db
       - MYSQL_DATABASE=nextcloud
@@ -145,6 +148,19 @@ services:
       - MYSQL_PASSWORD=nextcloud
     depends_on:
       - nextcloud_db
+
+  minidlna:
+    image: vladgh/minidlna:latest
+    container_name: minidlna
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /mnt/media:/media:ro
+      - ./minidlna/cache:/minidlna/cache
+      - ./minidlna/log:/minidlna/log
+    environment:
+      - MINIDLNA_MEDIA_DIR_1=/media
+      - MINIDLNA_FRIENDLY_NAME=BeelinkNAS
 
   nextcloud_db:
     image: mariadb:10.6
@@ -183,6 +199,30 @@ services:
     ports:
       - "3000:3000"
 
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+    networks:
+      - monitoring
+      - default
+    restart: unless-stopped
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    user: root
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./promtail-config.yaml:/etc/promtail/config.yml:ro
+    restart: unless-stopped
+    networks:
+      - monitoring
+
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
@@ -191,9 +231,9 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
     command:
-      - --path.procfs=/host/proc
-      - --path.sysfs=/host/sys
-      - --collector.filesystem.ignored-mount-points=^/(sys|proc)($|/)
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.ignored-mount-points=^/(sys|proc)($|/)"
     ports:
       - "9100:9100"
     networks:
@@ -221,7 +261,7 @@ services:
       - "9115:9115"
     networks:
       - monitoring
-  
+
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -231,7 +271,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-  
+
   glances:
     image: nicolargo/glances:latest
     container_name: glances
@@ -244,7 +284,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     environment:
       - GLANCES_OPT=-w
-  
+
   glance:
     image: glanceapp/glance:latest
     container_name: glance
@@ -258,7 +298,6 @@ services:
       - /sys:/host/sys:ro
       - /:/host:ro
 
-
 volumes:
   pihole_data:
   dnsmasq_data:
@@ -267,11 +306,7 @@ volumes:
   vaultwarden_data:
   wikijs_db_data:
   immich_db_data:
-  immich_uploads:
-  immich_library:
-  immich_model_cache:
   nextcloud_data:
-  nextcloud_storage:
   nextcloud_db_data:
   prometheus_data:
   grafana_data:
@@ -280,4 +315,3 @@ volumes:
 networks:
   monitoring:
     driver: bridge
-
