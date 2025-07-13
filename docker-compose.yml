@@ -1,0 +1,283 @@
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "8081:80"
+    environment:
+      TZ: Europe/Vienna
+      WEBPASSWORD: ${PIHOLE_WEBPASSWORD}
+      DNS1: 1.1.1.1
+      DNS2: 1.0.0.1
+      ServerIP: 192.168.178.10
+      WEB_PORT: 80
+    volumes:
+      - pihole_data:/etc/pihole
+      - dnsmasq_data:/etc/dnsmasq.d
+  
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"      # HTTP → Caddy
+      - "443:443"    # HTTPS → Caddy
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    depends_on:
+      - vaultwarden
+      - wikijs
+      - immich_server
+      - nextcloud
+      - grafana
+
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    environment:
+      - ADMIN_TOKEN=${VAULTWARDEN_ADMIN_TOKEN}
+    restart: unless-stopped
+    volumes:
+      - vaultwarden_data:/data
+
+  wikijs:
+    image: requarks/wiki:latest
+    container_name: wikijs
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=wikijs_db
+      - DB_PORT=5432
+      - DB_USER=wikijs
+      - DB_PASS=wikijs
+      - DB_NAME=wikijs
+    depends_on:
+      - wikijs_db
+
+  wikijs_db:
+    image: postgres:13
+    container_name: wikijs_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=wikijs
+      - POSTGRES_USER=wikijs
+      - POSTGRES_PASSWORD=wikijs
+    volumes:
+      - wikijs_db_data:/var/lib/postgresql/data
+
+  immich_server:
+    image: ghcr.io/immich-app/immich-server:release
+    container_name: immich_server
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - /mnt/immich-bulk/immich-data/upload:/usr/src/app/upload
+      - /mnt/immich-bulk/immich-data/library:/usr/src/app/library
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "2283:2283"
+    depends_on:
+      - immich_db
+      - redis
+    healthcheck:
+      disable: false
+
+  immich_machine_learning:
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    container_name: immich_machine_learning
+    restart: unless-stopped
+    environment:
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - /mnt/immich-bulk/immich-data/cache:/cache
+    depends_on:
+      - redis
+    healthcheck:
+      disable: false
+
+  immich_db:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:5f6a838e4e44c8e0e019d0ebfe3ee8952b69afc2809b2c25f7b0119641978e91
+    container_name: immich_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=immich
+      - POSTGRES_USER=immich
+      - POSTGRES_DB=immich
+      - POSTGRES_INITDB_ARGS=--data-checksums
+    volumes:
+      - immich_db_data:/var/lib/postgresql/data
+    shm_size: 128mb
+
+  redis:
+    image: docker.io/valkey/valkey:8-bookworm@sha256:fec42f399876eb6faf9e008570597741c87ff7662a54185593e74b09ce83d177
+    container_name: immich_redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    ports:
+      - "8082:80"
+    volumes:
+      - nextcloud_data:/var/www/html
+      - nextcloud_storage:/var/www/html/data
+    environment:
+      - MYSQL_HOST=nextcloud_db
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+    depends_on:
+      - nextcloud_db
+
+  nextcloud_db:
+    image: mariadb:10.6
+    container_name: nextcloud_db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=nextcloud
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=nextcloud
+    volumes:
+      - nextcloud_db_data:/var/lib/mysql
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    networks:
+      - monitoring
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    networks:
+      - monitoring
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    command:
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.ignored-mount-points=^/(sys|proc)($|/)
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
+
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox-exporter
+    restart: unless-stopped
+    ports:
+      - "9115:9115"
+    networks:
+      - monitoring
+  
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+  
+  glances:
+    image: nicolargo/glances:latest
+    container_name: glances
+    restart: unless-stopped
+    ports:
+      - "61208:61208"
+    pid: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - GLANCES_OPT=-w
+  
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    restart: unless-stopped
+    ports:
+      - "3010:8080"
+    volumes:
+      - ./glance:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro
+
+
+volumes:
+  pihole_data:
+  dnsmasq_data:
+  caddy_data:
+  caddy_config:
+  vaultwarden_data:
+  wikijs_db_data:
+  immich_db_data:
+  immich_uploads:
+  immich_library:
+  immich_model_cache:
+  nextcloud_data:
+  nextcloud_storage:
+  nextcloud_db_data:
+  prometheus_data:
+  grafana_data:
+  portainer_data:
+
+networks:
+  monitoring:
+    driver: bridge
+

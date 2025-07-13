@@ -1,0 +1,69 @@
+pages:
+  - name: Home-Server
+    columns:
+      - size: small
+        widgets:
+          - type: docker-containers
+            title: Containers
+
+      - size: full
+        widgets:
+          - type: monitor
+            title: Service status
+            cache: 1m
+            sites:
+              - title: Pi-hole
+                url: http://192.168.178.10:8081/admin
+                icon: si:pihole
+                alt-status-codes: [403]
+              - title: Vaultwarden
+                url: https://beelink.vault
+                icon: si:vaultwarden
+                insecure: true
+                expected-status-code: 200
+                expected-content: "Vaultwarden"
+              - title: Wiki.js
+                url: https://beelink.wiki
+                icon: si:wikipedia
+                insecure: true
+              - title: Immich
+                url: https://beelink.immich
+                icon: si:immich
+                insecure: true
+              - title: Nextcloud
+                url: https://beelink.nas
+                icon: si:nextcloud
+                insecure: true
+              - title: Grafana
+                url: https://beelink.grafana
+                icon: si:grafana
+                insecure: true
+              - title: Prometheus
+                url: https://beelink.prometheus
+                icon: si:prometheus
+                insecure: true
+              - title: Portainer
+                url: https://beelink.portainer
+                icon: si:portainer
+                insecure: true
+              - title: Glances
+                url: https://beelink.glances
+                icon: si:glances
+                insecure: true
+              - title: Homepage
+                url: https://beelink.homepage
+                icon: si:homeassistant
+                insecure: true
+
+
+      - size: small
+        widgets:
+          - type: dns-stats
+            title: Pi-hole stats
+            service: pihole-v6
+            url: http://192.168.178.10:8081
+            password: ${PIHOLE_WEBPASSWORD}
+            hour-format: 24h
+          - type: server-stats
+            title: Server stats
+

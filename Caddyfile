@@ -1,0 +1,58 @@
+# Global options block to tell Caddy to store its internal CA here
+{
+  storage file_system /data
+}
+
+# Vaultwarden
+beelink.vault {
+  reverse_proxy vaultwarden:80
+  tls internal
+}
+
+# Wiki.js
+beelink.wiki {
+  reverse_proxy wikijs:3000
+  tls internal
+}
+
+# Immich
+beelink.immich {
+  reverse_proxy immich_server:2283
+  tls internal
+}
+
+# Nextcloud
+beelink.nas {
+  reverse_proxy nextcloud:80
+  tls internal
+}
+
+# Grafana
+beelink.grafana {
+  reverse_proxy grafana:3000
+  tls internal
+}
+
+# Portainer
+beelink.portainer {
+  reverse_proxy portainer:9000
+  tls internal
+}
+
+# Glances
+beelink.glances {
+  reverse_proxy glances:61208
+  tls internal
+}
+
+# Homepage
+beelink.homepage {
+  reverse_proxy homepage:3000
+  tls internal
+}
+
+# Glance
+beelink.glance {
+  reverse_proxy glance:8080
+  tls internal
+}
