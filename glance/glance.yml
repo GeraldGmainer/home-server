@@ -24,53 +24,46 @@ pages:
                 check-url: https://192.168.178.10
 
               - title: Wiki.js
-                url: https://beelink.wiki
+                url: http://beelink.wiki
                 icon: si:wikipedia
                 insecure: true
                 check-url: http://192.168.178.10:3001
 
               - title: Immich
-                url: https://beelink.immich
+                url: http://beelink.immich
                 icon: si:immich
                 insecure: true
                 check-url: http://192.168.178.10:2283
 
               - title: Nextcloud
-                url: https://beelink.nas
+                url: http://beelink.nas
                 icon: si:nextcloud
                 insecure: true
                 check-url: http://192.168.178.10:8082
 
               - title: Grafana
-                url: https://beelink.grafana
+                url: http://beelink.grafana
                 icon: si:grafana
                 insecure: true
                 check-url: http://192.168.178.10:3000
 
               - title: Prometheus
-                url: https://beelink.prometheus
+                url: http://beelink.prometheus
                 icon: si:prometheus
                 insecure: true
                 check-url: http://192.168.178.10:9090
 
               - title: Portainer
-                url: https://beelink.portainer
+                url: http://beelink.portainer
                 icon: si:portainer
                 insecure: true
                 check-url: http://192.168.178.10:9000
 
               - title: Glances
-                url: https://beelink.glances
+                url: http://beelink.glances
                 icon: si:glances
                 insecure: true
                 check-url: http://192.168.178.10:61208
-
-              - title: Homepage
-                url: https://beelink.homepage
-                icon: si:homeassistant
-                insecure: true
-                check-url: http://192.168.178.10:3005
-
 
       - size: small
         widgets:
@@ -82,4 +75,14 @@ pages:
             hour-format: 24h
           - type: server-stats
             title: Server stats
+          - type: custom-api
+            title: Disk Usage
+            url: "http://host.docker.internal:5000/disk.json"
+            cache: 1m
+            template: |
+              <div style="font-size:14px;">
+               <p>🔧 NVMe Usage: {{ .JSON.Int "nvme" }} %</p>
+               <p>💾 SSD Usage: {{ .JSON.Int "ssd" }} %</p>
+              </div>
+
 
