@@ -121,3 +121,24 @@ Your central homelab dashboard with:
 - Pi-hole stats
 
 Configure in glance/glance.yml.
+
+## Run disk usage api
+
+build:
+
+```
+docker build --network=host -t disk_usage_api ./diskusage
+```
+
+start:
+
+```
+docker compose up -d disk_usage_api
+```
+
+test:
+
+```
+curl http://192.168.178.10:8000/
+
+```

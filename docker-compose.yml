@@ -297,6 +297,19 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /:/host:ro
+  
+  disk_usage_api:
+    image: disk_usage_api
+    container_name: disk_usage_api
+    restart: unless-stopped
+    environment:
+      NVME_PATH: /mnt/root
+      SSD_PATH: /mnt/immich-bulk
+    volumes:
+      - /:/mnt/root:ro
+      - /mnt/immich-bulk:/mnt/immich-bulk:ro
+    ports:
+      - "8000:8000"
 
 volumes:
   pihole_data:

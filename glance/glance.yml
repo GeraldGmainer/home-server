@@ -21,7 +21,7 @@ pages:
                 url: https://beelink.vault
                 icon: si:vaultwarden
                 insecure: true
-                check-url: https://192.168.178.10
+                check-url: http://192.168.178.10:80
 
               - title: Wiki.js
                 url: http://beelink.wiki
@@ -77,12 +77,46 @@ pages:
             title: Server stats
           - type: custom-api
             title: Disk Usage
-            url: "http://host.docker.internal:5000/disk.json"
+            url: "http://192.168.178.10:8000"
             cache: 1m
             template: |
-              <div style="font-size:14px;">
-               <p>🔧 NVMe Usage: {{ .JSON.Int "nvme" }} %</p>
-               <p>💾 SSD Usage: {{ .JSON.Int "ssd" }} %</p>
+              <div style="font-family: monospace; font-size: 14px;">
+                <div style="margin-bottom: 12px;">
+                  <strong>Root</strong><br/>
+                  {{ .JSON.String "root.used" }} / {{ .JSON.String "root.total" }} ({{ .JSON.Int "root.percent" }} %)
+                  <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: #999; width: {{ .JSON.Int "root.percent" }}%; height: 8px;"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <strong>Immich</strong><br/>
+                  {{ .JSON.String "immich.used" }} / {{ .JSON.String "immich.total" }} ({{ .JSON.Int "immich.percent" }} %)
+                  <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: #999; width: {{ .JSON.Int "immich.percent" }}%; height: 8px;"></div>
+                  </div>
+                </div>
               </div>
-
-
+          
+          - type: custom-api
+            title: Immich stats
+            cache: 1d
+            url: http://192.168.178.10:2283/api/server/statistics
+            headers:
+              x-api-key: ${IMMICH_API_KEY}
+              Accept: application/json
+            template: |
+              <div class="flex justify-between text-center">
+                <div>
+                    <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                    <div class="size-h6">PHOTOS</div>
+                </div>
+                <div>
+                    <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                    <div class="size-h6">VIDEOS</div>
+                </div>
+                <div>
+                    <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                    <div class="size-h6">USAGE</div>
+                </div>
+              </div>
