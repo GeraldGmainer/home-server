@@ -1,0 +1,142 @@
+{
+  "uid": "tasmota-energy",
+  "title": "Tasmota Plug Power",
+  "schemaVersion": 38,
+  "version": 2,
+  "refresh": "5s",
+  "timezone": "browser",
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Desk – Current Power",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "aertuvznphm9sb"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/desk\"}"
+        }
+      ],
+      "timeFrom": "24h",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "unit": "watt", "decimals": 0 } }
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "PC – Current Power",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/pc\"}" }
+      ],
+      "timeFrom": "24h",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "unit": "watt", "decimals": 0 } }
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "All Plugs – Current Power",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "sum(tasmota_status_sns_energy_power{job=\"tasmota\"})" }
+      ],
+      "timeFrom": "24h",
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 4 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "unit": "watt", "decimals": 0 } }
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Desk – Last 24 h",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/desk\"}" }
+      ],
+      "timeFrom": "24h",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 }
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "PC – Last 24 h",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/pc\"}" }
+      ],
+      "timeFrom": "24h",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 }
+    },
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Desk – Avg Month",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "avg_over_time(tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/desk\"}[30d])" }
+      ],
+      "timeFrom": "30d",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "unit": "watt", "decimals": 0 } }
+    },
+    {
+      "id": 9,
+      "type": "stat",
+      "title": "PC – Average Month",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "avg_over_time(tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/pc\"}[30d])" }
+      ],
+      "timeFrom": "30d",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "unit": "watt", "decimals": 0 } }
+    },
+    {
+      "id": 10,
+      "type": "stat",
+      "title": "All Plugs – Average Power",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "sum(tasmota_status_sns_energy_power{job=\"tasmota\"})" }
+      ],
+      "timeFrom": "30d",
+      "gridPos": { "h": 4, "w": 12, "x": 18, "y": 4 },
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "unit": "watt", "decimals": 0 } }
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "Desk – Last 30 d",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/desk\"}" }
+      ],
+      "timeFrom": "30d",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 }
+    },
+    {
+      "id": 12,
+      "type": "timeseries",
+      "title": "PC – Last 30 d",
+      "datasource": { "type": "prometheus", "uid": "aertuvznphm9sb" },
+      "targets": [
+        { "refId": "A", "expr": "tasmota_status_sns_energy_power{job=\"tasmota\",source=\"stat/pc\"}" }
+      ],
+      "timeFrom": "30d",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 }
+    }
+  ]
+}

@@ -27,4 +27,10 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: blackbox-exporter:9115
+  
+  - job_name: 'tasmota'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['tasmota_exporter:9092']
+
 

@@ -2,6 +2,11 @@
   storage file_system /data
 }
 
+# Pihole - HTTP only
+http://beelink.pihole {
+  reverse_proxy pihole:8081
+}
+
 # Vaultwarden - HTTPS only with internal CA
 beelink.vault {
   reverse_proxy vaultwarden:80
@@ -26,6 +31,11 @@ http://beelink.nas {
 # Grafana - HTTP only
 http://beelink.grafana {
   reverse_proxy grafana:3000
+}
+
+# Prometheus - HTTP only
+http://beelink.prometheus {
+  reverse_proxy prometheus:9090
 }
 
 # Portainer - HTTP only

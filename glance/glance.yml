@@ -42,7 +42,7 @@ pages:
                 check-url: http://192.168.178.10:8082
 
               - title: Grafana
-                url: http://beelink.grafana
+                url: http://beelink.grafana/dashboards
                 icon: si:grafana
                 insecure: true
                 check-url: http://192.168.178.10:3000
@@ -103,7 +103,7 @@ pages:
             cache: 1d
             url: http://192.168.178.10:2283/api/server/statistics
             headers:
-              x-api-key: ${IMMICH_API_KEY}
+              x-api-key: FWf1IbsDpf2xAdNTju0Beo49fkb7U3fER1IxOqy2C0
               Accept: application/json
             template: |
               <div class="flex justify-between text-center">
