@@ -83,7 +83,7 @@ pages:
               <div style="font-family: monospace; font-size: 14px;">
                 <div style="margin-bottom: 12px;">
                   <strong>Root</strong><br/>
-                  {{ .JSON.String "root.used" }} / {{ .JSON.String "root.total" }} ({{ .JSON.Int "root.percent" }} %)
+                  <div class="color-highlight size-h3">{{ .JSON.String "root.used" }} / {{ .JSON.String "root.total" }} ({{ .JSON.Int "root.percent" }} %)</div>
                   <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
                     <div style="background: #999; width: {{ .JSON.Int "root.percent" }}%; height: 8px;"></div>
                   </div>
@@ -91,7 +91,7 @@ pages:
 
                 <div>
                   <strong>Immich</strong><br/>
-                  {{ .JSON.String "immich.used" }} / {{ .JSON.String "immich.total" }} ({{ .JSON.Int "immich.percent" }} %)
+                  <div class="color-highlight size-h3">{{ .JSON.String "immich.used" }} / {{ .JSON.String "immich.total" }} ({{ .JSON.Int "immich.percent" }} %)</div>
                   <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
                     <div style="background: #999; width: {{ .JSON.Int "immich.percent" }}%; height: 8px;"></div>
                   </div>
@@ -119,4 +119,24 @@ pages:
                     <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
                     <div class="size-h6">USAGE</div>
                 </div>
+              </div>
+          
+          - type: custom-api
+            title: Current watt usage
+            cache: 5s
+            url: "http://192.168.178.10:9090/api/v1/query?query=sum%20by%20(source)(tasmota_status_sns_energy_power%7Bjob%3D%22tasmota%22%2Csource%3D~%22stat/(desk|pc)%22%7D)"
+            template: |
+              <div style="font-family: monospace; font-size: 14px; padding: 4px 8px;">
+                <table style="width: 100%;">
+                  {{ range .JSON.Array "data.result" }}
+                    {{ $src := .String "metric.source" }}
+                    {{ $val := .Float "value.1" }}
+                    {{ if eq $src "stat/desk" }}
+                      <tr><td>DESK</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
+                    {{ end }}
+                    {{ if eq $src "stat/pc" }}
+                      <tr><td>PC</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
+                    {{ end }}
+                  {{ end }}
+                </table>
               </div>
