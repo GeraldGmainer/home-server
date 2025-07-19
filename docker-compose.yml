@@ -2,13 +2,13 @@ services:
   pihole:
     image: pihole/pihole:latest
     container_name: pihole
+    network_mode: host
     restart: unless-stopped
     environment:
       TZ: Europe/Vienna
       FTLCONF_webserver_api_password: ${PIHOLE_WEBPASSWORD}
-      FTLCONF_webserver_port: '8081o,[::]:8081o,8443os,[::]:8443os'
-      FTLCONF_dns_upstreams: '1.1.1.1;1.0.0.1'
-      FTLCONF_reply_addr4: 192.168.178.10
+      FTLCONF_webserver_port: '8081,8443os,[::]:8081,[::]:8443os'
+      FTLCONF_dns_upstreams: "1.1.1.1;1.0.0.1"
       FTLCONF_dns_listeningMode: all
     cap_add:
       - SYS_NICE
@@ -291,11 +291,11 @@ services:
     ports:
       - "9092:9092"
     environment:
-      - MQTT_HOSTNAME: mosquitto
-      - MQTT_PORT: 1883
-      - PROMETHEUS_EXPORTER_PORT: 9092
-      - MQTT_TOPIC: tele/+/SENSOR
-      - MQTT_TOPICS: "tele/#, stat/#"
+      - MQTT_HOSTNAME=mosquitto
+      - MQTT_PORT=1883
+      - PROMETHEUS_EXPORTER_PORT=9092
+      - MQTT_TOPIC=tele/+/SENSOR
+      - MQTT_TOPICS=tele/#, stat/#
     depends_on:
       - mosquitto
     networks:
@@ -320,6 +320,8 @@ services:
     image: glanceapp/glance:latest
     container_name: glance
     restart: unless-stopped
+    dns:
+      - 192.168.178.10
     ports:
       - "3010:8080"
     volumes:

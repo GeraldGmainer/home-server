@@ -20,8 +20,9 @@ pages:
               - title: Vaultwarden
                 url: https://beelink.vault
                 icon: si:vaultwarden
-                insecure: true
-                check-url: http://192.168.178.10:80
+                allow-insecure: true
+                check-url: https://beelink.vault/alive
+                alt-status-codes: [200,301,302,307,401,403]
 
               - title: Wiki.js
                 url: http://beelink.wiki
