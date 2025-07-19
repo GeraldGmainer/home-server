@@ -57,3 +57,28 @@ http://beelink.homepage {
 http://beelink.glance {
   reverse_proxy glance:8080
 }
+
+# Node Exporter - HTTP only
+http://beelink.node-exporter {
+  reverse_proxy node-exporter:9100
+}
+
+# cAdvisor - HTTP only
+http://beelink.cadvisor {
+  reverse_proxy cadvisor:8080
+}
+
+# Blackbox Exporter - HTTP only
+http://beelink.blackbox-exporter {
+  reverse_proxy blackbox-exporter:9115
+}
+
+# Promtail - HTTP only
+http://beelink.promtail {
+  reverse_proxy promtail:9080
+}
+
+# Tasmota Exporter - HTTP only
+http://beelink.tasmota_exporter {
+  reverse_proxy tasmota_exporter:9092
+}

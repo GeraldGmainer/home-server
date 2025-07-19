@@ -62,9 +62,60 @@ pages:
 
               - title: Glances
                 url: http://beelink.glances
-                icon: si:glances
+                icon: si:gnome
                 insecure: true
                 check-url: http://192.168.178.10:61208
+              
+              - title: cAdvisor
+                url: http://beelink.cadvisor
+                icon: si:docker
+                insecure: true
+                check-url: http://192.168.178.10:8080
+
+              - title: Node Exporter
+                url: http://beelink.node-exporter
+                icon: si:linux
+                insecure: true
+                check-url: http://192.168.178.10:9100
+
+              - title: Blackbox Exporter
+                url: http://beelink.blackbox-exporter
+                icon: si:prometheus
+                insecure: true
+                check-url: http://192.168.178.10:9115
+              
+              - title: Promtail
+                url: http://beelink.promtail
+                icon: si:logstash
+                insecure: true
+          
+          - type: bookmarks
+            title: Smart Plugs & Monitoring
+            groups:
+              - title: Tasmota Plugs
+                color: 120 60 50
+                links:
+                  - title: MAC Plug
+                    url: http://192.168.178.55/
+                  - title: Desk Plug
+                    url: http://192.168.178.56/
+              - title: Grafana Dashboards
+                color: 60 80 50
+                links:
+                  - title: Watt Usage 
+                    url: http://beelink.grafana/d/tasmota-energy/tasmota-plug-power?orgId=1&from=now-24h&to=now&timezone=browser&refresh=5s
+                  - title: cAdvisor Exporter
+                    url: http://beelink.grafana/d/pMEd7m0Mz/cadvisor-exporter?orgId=1&from=now-6h&to=now&timezone=browser&var-host=$__all&var-container=$__all
+                  - title: App Logs 
+                    url: http://beelink.grafana/d/sadlil-loki-apps-dashboard/logs-app?orgId=1&from=now-1h&to=now&timezone=browser&var-app=docker&var-search=
+                  - title: Node Exporter
+                    url: http://beelink.grafana/d/rYdddlPWk/node-exporter-full?orgId=1&from=now-24h&to=now&timezone=browser&var-DS_PROMETHEUS=aertuvznphm9sb&var-job=node-exporter&var-nodename=0fa233a88be8&var-node=node-exporter:9100&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&refresh=1m
+
+              - title: Router Access
+                color: 0 70 50
+                links:
+                  - title: FRITZ!Box
+                    url: https://fritz.box/#
 
       - size: small
         widgets:
@@ -141,3 +192,5 @@ pages:
                   {{ end }}
                 </table>
               </div>
+          
+          
