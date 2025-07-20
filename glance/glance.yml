@@ -3,6 +3,16 @@ pages:
     columns:
       - size: small
         widgets:
+          - type: dns-stats
+            title: Pi-hole stats
+            service: pihole-v6
+            url: http://192.168.178.10:8081
+            password: 1234
+            hour-format: 24h
+
+          - type: server-stats
+            title: Server stats
+            
           - type: docker-containers
             title: Containers
 
@@ -12,82 +22,90 @@ pages:
             title: Service status
             cache: 1m
             sites:
-              - title: Pi-hole
-                url: http://192.168.178.10:8081/admin
-                icon: si:pihole
-                alt-status-codes: [403]
+            - title: Pi-hole
+              url: http://192.168.178.10:8081/admin
+              icon: si:pihole
+              alt-status-codes: [403]
 
-              - title: Vaultwarden
-                url: https://beelink.vault
-                icon: si:vaultwarden
-                allow-insecure: true
-                check-url: https://beelink.vault/alive
-                alt-status-codes: [200,301,302,307,401,403]
+            - title: Vaultwarden
+              url: https://beelink.vault
+              icon: si:vaultwarden
+              allow-insecure: true
+              check-url: https://beelink.vault/alive
+              alt-status-codes: [200,301,302,307,401,403]
 
-              - title: Wiki.js
-                url: http://beelink.wiki
-                icon: si:wikipedia
-                insecure: true
-                check-url: http://192.168.178.10:3001
+            - title: Wiki.js
+              url: http://192.168.178.10:3001
+              icon: si:wikipedia
+              insecure: true
+              check-url: http://192.168.178.10:3001
 
-              - title: Immich
-                url: http://beelink.immich
-                icon: si:immich
-                insecure: true
-                check-url: http://192.168.178.10:2283
+            - title: Immich
+              url: http://192.168.178.10:2283
+              icon: si:immich
+              insecure: true
+              check-url: http://192.168.178.10:2283
 
-              - title: Nextcloud
-                url: http://beelink.nas
-                icon: si:nextcloud
-                insecure: true
-                check-url: http://192.168.178.10:8082
+            - title: Nextcloud
+              url: http://192.168.178.10:8082/apps/files/files
+              icon: si:nextcloud
+              insecure: true
+              check-url: http://192.168.178.10:8082
 
-              - title: Grafana
-                url: http://beelink.grafana/dashboards
-                icon: si:grafana
-                insecure: true
-                check-url: http://192.168.178.10:3000
+            - title: Grafana
+              url: http://192.168.178.10:3000/dashboards
+              icon: si:grafana
+              insecure: true
+              check-url: http://192.168.178.10:3000
 
-              - title: Prometheus
-                url: http://beelink.prometheus
-                icon: si:prometheus
-                insecure: true
-                check-url: http://192.168.178.10:9090
+            - title: Prometheus
+              url: http://192.168.178.10:9090
+              icon: si:prometheus
+              insecure: true
+              check-url: http://192.168.178.10:9090
 
-              - title: Portainer
-                url: http://beelink.portainer
-                icon: si:portainer
-                insecure: true
-                check-url: http://192.168.178.10:9000
+            - title: Portainer
+              url: http://192.168.178.10:9000
+              icon: si:portainer
+              insecure: true
+              check-url: http://192.168.178.10:9000
 
-              - title: Glances
-                url: http://beelink.glances
-                icon: si:gnome
-                insecure: true
-                check-url: http://192.168.178.10:61208
-              
-              - title: cAdvisor
-                url: http://beelink.cadvisor
-                icon: si:docker
-                insecure: true
-                check-url: http://192.168.178.10:8080
+            - title: Glances
+              url: http://192.168.178.10:61208
+              icon: si:gnome
+              insecure: true
+              check-url: http://192.168.178.10:61208
 
-              - title: Node Exporter
-                url: http://beelink.node-exporter
-                icon: si:linux
-                insecure: true
-                check-url: http://192.168.178.10:9100
+            - title: Home Assistant
+              url: http://192.168.178.10:8123
+              icon: si:homeassistant
+              insecure: true
+              check-url: http://192.168.178.10:8123
 
-              - title: Blackbox Exporter
-                url: http://beelink.blackbox-exporter
-                icon: si:prometheus
-                insecure: true
-                check-url: http://192.168.178.10:9115
-              
-              - title: Promtail
-                url: http://beelink.promtail
-                icon: si:logstash
-                insecure: true
+            - title: cAdvisor
+              url: http://192.168.178.10:8080
+              icon: si:docker
+              insecure: true
+              check-url: http://192.168.178.10:8080
+
+            - title: Node Exporter
+              url: http://192.168.178.10:9100
+              icon: si:linux
+              insecure: true
+              check-url: http://192.168.178.10:9100
+
+            - title: Blackbox Exporter
+              url: http://192.168.178.10:9115
+              icon: si:prometheus
+              insecure: true
+              check-url: http://192.168.178.10:9115
+
+            - title: Promtail
+              url: http://192.168.178.10:9080
+              icon: si:logstash
+              insecure: true
+
+
           
           - type: bookmarks
             title: Smart Plugs & Monitoring
@@ -107,13 +125,13 @@ pages:
                 color: 60 80 50
                 links:
                   - title: Watt Usage 
-                    url: http://beelink.grafana/d/tasmota-energy/tasmota-plug-power?orgId=1&from=now-24h&to=now&timezone=browser&refresh=5s
+                    url: http://192.168.178.10:3000/d/tasmota-energy/tasmota-plug-power?orgId=1&from=now-24h&to=now&timezone=browser&refresh=5s
                   - title: cAdvisor Exporter
-                    url: http://beelink.grafana/d/pMEd7m0Mz/cadvisor-exporter?orgId=1&from=now-6h&to=now&timezone=browser&var-host=$__all&var-container=$__all
+                    url: http://192.168.178.10:3000/d/pMEd7m0Mz/cadvisor-exporter?orgId=1&from=now-6h&to=now&timezone=browser&var-host=$__all&var-container=$__all
                   - title: App Logs 
-                    url: http://beelink.grafana/d/sadlil-loki-apps-dashboard/logs-app?orgId=1&from=now-1h&to=now&timezone=browser&var-app=docker&var-search=
+                    url: http://192.168.178.10:3000/d/sadlil-loki-apps-dashboard/logs-app?orgId=1&from=now-1h&to=now&timezone=browser&var-app=docker&var-search=
                   - title: Node Exporter
-                    url: http://beelink.grafana/d/rYdddlPWk/node-exporter-full?orgId=1&from=now-24h&to=now&timezone=browser&var-DS_PROMETHEUS=aertuvznphm9sb&var-job=node-exporter&var-nodename=0fa233a88be8&var-node=node-exporter:9100&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&refresh=1m
+                    url: http://192.168.178.10:3000/d/rYdddlPWk/node-exporter-full?orgId=1&from=now-24h&to=now&timezone=browser&var-DS_PROMETHEUS=aertuvznphm9sb&var-job=node-exporter&var-nodename=0fa233a88be8&var-node=node-exporter:9100&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&refresh=1m
 
               - title: Router Access
                 color: 0 70 50
@@ -123,14 +141,6 @@ pages:
 
       - size: small
         widgets:
-          - type: dns-stats
-            title: Pi-hole stats
-            service: pihole-v6
-            url: http://192.168.178.10:8081
-            password: 1234
-            hour-format: 24h
-          - type: server-stats
-            title: Server stats
           - type: custom-api
             title: Disk Usage
             url: "http://192.168.178.10:8000"

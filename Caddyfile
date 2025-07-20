@@ -2,83 +2,97 @@
   storage file_system /data
 }
 
-# Pihole - HTTP only
-http://beelink.pihole {
-  reverse_proxy pihole:8081
-}
 
-# Vaultwarden - HTTPS only with internal CA
+# Vaultwarden - HTTPS only
 beelink.vault {
   reverse_proxy vaultwarden:80
   tls internal
 }
 
-# Wiki.js - HTTP only
-http://beelink.wiki {
-  reverse_proxy wikijs:3000
-}
+# disabled because no need anymore
+# # Pihole - HTTP only
+# http://beelink.pihole {
+#   reverse_proxy pihole:8081
+# }
 
-# Immich - HTTP only
-http://beelink.immich {
-  reverse_proxy immich_server:2283
-}
+# # Vaultwarden - HTTPS only with internal CA
+# beelink.vault {
+#   reverse_proxy vaultwarden:80
+#   tls internal
+# }
 
-# Nextcloud - HTTP only
-http://beelink.nas {
-  reverse_proxy nextcloud:80
-}
+# # Wiki.js - HTTP only
+# http://beelink.wiki {
+#   reverse_proxy wikijs:3000
+# }
 
-# Grafana - HTTP only
-http://beelink.grafana {
-  reverse_proxy grafana:3000
-}
+# # Immich - HTTP only
+# http://beelink.immich {
+#   reverse_proxy immich_server:2283
+# }
 
-# Prometheus - HTTP only
-http://beelink.prometheus {
-  reverse_proxy prometheus:9090
-}
+# # Nextcloud - HTTP only
+# http://beelink.nas {
+#   reverse_proxy nextcloud:80
+# }
 
-# Portainer - HTTP only
-http://beelink.portainer {
-  reverse_proxy portainer:9000
-}
+# # Grafana - HTTP only
+# http://beelink.grafana {
+#   reverse_proxy grafana:3000
+# }
 
-# Glances - HTTP only
-http://beelink.glances {
-  reverse_proxy glances:61208
-}
+# # Prometheus - HTTP only
+# http://beelink.prometheus {
+#   reverse_proxy prometheus:9090
+# }
 
-# Homepage - HTTP only
-http://beelink.homepage {
-  reverse_proxy homepage:3000
-}
+# # Portainer - HTTP only
+# http://beelink.portainer {
+#   reverse_proxy portainer:9000
+# }
 
-# Glance - HTTP only
-http://beelink.glance {
-  reverse_proxy glance:8080
-}
+# # Glances - HTTP only
+# http://beelink.glances {
+#   reverse_proxy glances:61208
+# }
 
-# Node Exporter - HTTP only
-http://beelink.node-exporter {
-  reverse_proxy node-exporter:9100
-}
+# # Homepage - HTTP only
+# http://beelink.homepage {
+#   reverse_proxy homepage:3000
+# }
 
-# cAdvisor - HTTP only
-http://beelink.cadvisor {
-  reverse_proxy cadvisor:8080
-}
+# # Glance - HTTP only
+# http://beelink.glance {
+#   reverse_proxy glance:8080
+# }
 
-# Blackbox Exporter - HTTP only
-http://beelink.blackbox-exporter {
-  reverse_proxy blackbox-exporter:9115
-}
+# # Node Exporter - HTTP only
+# http://beelink.node-exporter {
+#   reverse_proxy node-exporter:9100
+# }
 
-# Promtail - HTTP only
-http://beelink.promtail {
-  reverse_proxy promtail:9080
-}
+# # cAdvisor - HTTP only
+# http://beelink.cadvisor {
+#   reverse_proxy cadvisor:8080
+# }
 
-# Tasmota Exporter - HTTP only
-http://beelink.tasmota_exporter {
-  reverse_proxy tasmota_exporter:9092
-}
+# # Blackbox Exporter - HTTP only
+# http://beelink.blackbox-exporter {
+#   reverse_proxy blackbox-exporter:9115
+# }
+
+# # Promtail - HTTP only
+# http://beelink.promtail {
+#   reverse_proxy promtail:9080
+# }
+
+# # Tasmota Exporter - HTTP only
+# http://beelink.tasmota_exporter {
+#   reverse_proxy tasmota_exporter:9092
+# }
+
+# # Home Assistant - HTTP only
+# http://beelink.home-assistant {
+#   reverse_proxy localhost:8123
+# }
+

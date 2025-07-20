@@ -147,19 +147,6 @@ services:
     depends_on:
       - nextcloud_db
 
-  minidlna:
-    image: vladgh/minidlna:latest
-    container_name: minidlna
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - /mnt/media:/media:ro
-      - ./minidlna/cache:/minidlna/cache
-      - ./minidlna/log:/minidlna/log
-    environment:
-      - MINIDLNA_MEDIA_DIR_1=/media
-      - MINIDLNA_FRIENDLY_NAME=BeelinkNAS
-
   nextcloud_db:
     image: mariadb:10.6
     container_name: nextcloud_db
@@ -220,6 +207,8 @@ services:
     restart: unless-stopped
     networks:
       - monitoring
+    ports:
+      - "9080:9080"
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -345,6 +334,18 @@ services:
       - /mnt/immich-bulk:/mnt/immich-bulk:ro
     ports:
       - "8000:8000"
+  
+  homeassistant:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    environment:
+      - TZ=Europe/Vienna
+    volumes:
+      - homeassistant_config:/config
+      - /etc/localtime:/etc/localtime:ro
 
 volumes:
   pihole_data:
@@ -359,6 +360,8 @@ volumes:
   prometheus_data:
   grafana_data:
   portainer_data:
+  homeassistant_config:
+
 
 networks:
   monitoring:
