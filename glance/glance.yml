@@ -95,10 +95,14 @@ pages:
               - title: Tasmota Plugs
                 color: 120 60 50
                 links:
-                  - title: MAC Plug
-                    url: http://192.168.178.55/
                   - title: Desk Plug
+                    url: http://192.168.178.55/
+                  - title: PC Plug
                     url: http://192.168.178.56/
+                  - title: TV Plug
+                    url: http://192.168.178.57/
+                  - title: Server Plug
+                    url: http://192.168.178.58/
               - title: Grafana Dashboards
                 color: 60 80 50
                 links:
@@ -176,7 +180,7 @@ pages:
           - type: custom-api
             title: Current watt usage
             cache: 5s
-            url: "http://192.168.178.10:9090/api/v1/query?query=sum%20by%20(source)(tasmota_status_sns_energy_power%7Bjob%3D%22tasmota%22%2Csource%3D~%22stat/(desk|pc)%22%7D)"
+            url: "http://192.168.178.10:9090/api/v1/query?query=sum%20by%20(source)(tasmota_status_sns_energy_power%7Bjob%3D%22tasmota%22%2Csource%3D~%22stat/(desk|pc|tv|server)%22%7D)"
             template: |
               <div style="font-family: monospace; font-size: 14px; padding: 4px 8px;">
                 <table style="width: 100%;">
@@ -184,10 +188,16 @@ pages:
                     {{ $src := .String "metric.source" }}
                     {{ $val := .Float "value.1" }}
                     {{ if eq $src "stat/desk" }}
-                      <tr><td>DESK</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
+                      <tr><td>Desk</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
                     {{ end }}
                     {{ if eq $src "stat/pc" }}
                       <tr><td>PC</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
+                    {{ end }}
+                    {{ if eq $src "stat/tv" }}
+                      <tr><td>TV</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
+                    {{ end }}
+                    {{ if eq $src "stat/server" }}
+                      <tr><td>Server</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
                     {{ end }}
                   {{ end }}
                 </table>

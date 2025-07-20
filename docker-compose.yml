@@ -333,7 +333,6 @@ services:
     networks:
       - monitoring
 
-  
   disk_usage_api:
     image: disk_usage_api
     container_name: disk_usage_api
