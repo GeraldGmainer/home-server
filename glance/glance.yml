@@ -22,10 +22,6 @@ pages:
             title: Service status
             cache: 1m
             sites:
-            - title: Pi-hole
-              url: http://192.168.178.10:8081/admin
-              icon: si:pihole
-              alt-status-codes: [403]
 
             - title: Vaultwarden
               url: https://beelink.vault
@@ -33,24 +29,35 @@ pages:
               allow-insecure: true
               check-url: https://beelink.vault/alive
               alt-status-codes: [200,301,302,307,401,403]
+            
+            - title: Immich
+              url: http://192.168.178.10:2283
+              icon: si:immich
+              insecure: true
+              check-url: http://192.168.178.10:2283
+            
+            - title: Nextcloud
+              url: http://192.168.178.10:8082/apps/files/files
+              icon: si:nextcloud
+              insecure: true
+              check-url: http://192.168.178.10:8082
+
+            - title: Pi-hole
+              url: http://192.168.178.10:8081/admin
+              icon: si:pihole
+              alt-status-codes: [403]
 
             - title: Wiki.js
               url: http://192.168.178.10:3001
               icon: si:wikipedia
               insecure: true
               check-url: http://192.168.178.10:3001
-
-            - title: Immich
-              url: http://192.168.178.10:2283
-              icon: si:immich
+            
+            - title: Home Assistant
+              url: http://192.168.178.10:8123
+              icon: si:homeassistant
               insecure: true
-              check-url: http://192.168.178.10:2283
-
-            - title: Nextcloud
-              url: http://192.168.178.10:8082/apps/files/files
-              icon: si:nextcloud
-              insecure: true
-              check-url: http://192.168.178.10:8082
+              check-url: http://192.168.178.10:8123
 
             - title: Grafana
               url: http://192.168.178.10:3000/dashboards
@@ -76,12 +83,6 @@ pages:
               insecure: true
               check-url: http://192.168.178.10:61208
 
-            - title: Home Assistant
-              url: http://192.168.178.10:8123
-              icon: si:homeassistant
-              insecure: true
-              check-url: http://192.168.178.10:8123
-
             - title: cAdvisor
               url: http://192.168.178.10:8080
               icon: si:docker
@@ -105,8 +106,6 @@ pages:
               icon: si:logstash
               insecure: true
 
-
-          
           - type: bookmarks
             title: Smart Plugs & Monitoring
             groups:
@@ -121,6 +120,10 @@ pages:
                     url: http://192.168.178.57/
                   - title: Server Plug
                     url: http://192.168.178.58/
+                  - title: Bambu Plug
+                    url: http://192.168.178.59/
+                  - title: ?? Plug
+                    url: http://192.168.178.60/
               - title: Grafana Dashboards
                 color: 60 80 50
                 links:
@@ -138,6 +141,38 @@ pages:
                 links:
                   - title: FRITZ!Box
                     url: https://fritz.box/#
+          
+          - type: custom-api
+            title: Smart Plugs
+            url: http://192.168.178.10:3500/status
+            cache: 5s
+            template: |
+              <div style="font-family: sans-serif; font-size: 14px;">
+                {{ $i := 0 }}
+                {{ range .JSON.Array "" }}
+                  {{ if eq (mod $i 3) 0 }}
+                    {{ if ne $i 0 }}</div>{{ end }}
+                    <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                  {{ end }}
+                  <div style="flex: 1; padding: 8px 12px; border-radius: 8px; background: #1e1e1e;">
+                    <div style="font-weight: bold; font-size: 15px; margin-bottom: 4px;">
+                      <a href="{{ .String "url" }}" target="_blank" style="text-decoration: none; color: #00bfff;">{{ .String "name" }}</a>
+                    </div>
+                    <div style="margin-bottom: 6px;">State: 
+                      <span style="color: {{ if eq (.String "state") "ON" }}#4caf50{{ else }}#f44336{{ end }};">
+                        {{ .String "state" }}
+                      </span>
+                    </div>
+                    <div>
+                      <a href="http://192.168.178.10:3500/toggle?ip={{ .String "ip" }}" target="_blank" style="display: inline-block; padding: 6px 14px; font-weight: bold; border-radius: 16px; text-decoration: none; font-size: 13px; background-color: #444; color: #fff; border: 1px solid #888;">
+                        Toggle
+                      </a>
+                    </div>
+                  </div>
+                  {{ $i = add $i 1 }}
+                {{ end }}
+                </div>
+              </div>
 
       - size: small
         widgets:
@@ -190,24 +225,24 @@ pages:
           - type: custom-api
             title: Current watt usage
             cache: 5s
-            url: "http://192.168.178.10:9090/api/v1/query?query=sum%20by%20(source)(tasmota_status_sns_energy_power%7Bjob%3D%22tasmota%22%2Csource%3D~%22stat/(desk|pc|tv|server)%22%7D)"
+            url: "http://192.168.178.10:9090/api/v1/query?query=sum%20by%20(source)(tasmota_status_sns_energy_power%7Bjob%3D%22tasmota%22%2Csource%3D~%22stat/(desk|pc|tv|server|bambu)%22%7D)"
             template: |
               <div style="font-family: monospace; font-size: 14px; padding: 4px 8px;">
                 <table style="width: 100%;">
                   {{ range .JSON.Array "data.result" }}
                     {{ $src := .String "metric.source" }}
                     {{ $val := .Float "value.1" }}
-                    {{ if eq $src "stat/desk" }}
-                      <tr><td>Desk</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
-                    {{ end }}
-                    {{ if eq $src "stat/pc" }}
-                      <tr><td>PC</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
-                    {{ end }}
-                    {{ if eq $src "stat/tv" }}
-                      <tr><td>TV</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
-                    {{ end }}
-                    {{ if eq $src "stat/server" }}
-                      <tr><td>Server</td><td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td></tr>
+                    {{ $label := "" }}
+                    {{ if eq $src "stat/desk" }}{{ $label = "Desk" }}{{ end }}
+                    {{ if eq $src "stat/pc" }}{{ $label = "PC" }}{{ end }}
+                    {{ if eq $src "stat/tv" }}{{ $label = "TV" }}{{ end }}
+                    {{ if eq $src "stat/server" }}{{ $label = "Server" }}{{ end }}
+                    {{ if eq $src "stat/bambu" }}{{ $label = "Bambu" }}{{ end }}
+                    {{ if $label }}
+                      <tr>
+                        <td>{{ $label }}</td>
+                        <td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td>
+                      </tr>
                     {{ end }}
                   {{ end }}
                 </table>

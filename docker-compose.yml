@@ -335,6 +335,13 @@ services:
     ports:
       - "8000:8000"
   
+  plug_control:
+    build: ./plugcontrol
+    container_name: plug_control
+    ports:
+      - "3500:3500"
+    restart: unless-stopped
+  
   homeassistant:
     image: ghcr.io/home-assistant/home-assistant:stable
     container_name: homeassistant
