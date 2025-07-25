@@ -122,23 +122,23 @@ Your central homelab dashboard with:
 
 Configure in glance/glance.yml.
 
-## Run disk usage api
+## Build plugcontrol image
 
 build:
 
-```
-docker build --network=host -t disk_usage_api ./diskusage
+```docker
+docker compose build --no-cache plug_control
 ```
 
 start:
 
 ```
-docker compose up -d disk_usage_api
+docker compose up -d plug_control
 ```
 
 test:
 
 ```
-curl http://192.168.178.10:8000/
+curl http://192.168.178.10:3500/status
 
 ```

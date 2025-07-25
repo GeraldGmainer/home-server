@@ -107,25 +107,10 @@ pages:
               insecure: true
 
           - type: bookmarks
-            title: Smart Plugs & Monitoring
+            title: Bookmarks
             groups:
-              - title: Tasmota Plugs
-                color: 120 60 50
-                links:
-                  - title: Desk Plug
-                    url: http://192.168.178.55/
-                  - title: PC Plug
-                    url: http://192.168.178.56/
-                  - title: TV Plug
-                    url: http://192.168.178.57/
-                  - title: Server Plug
-                    url: http://192.168.178.58/
-                  - title: Bambu Plug
-                    url: http://192.168.178.59/
-                  - title: ?? Plug
-                    url: http://192.168.178.60/
               - title: Grafana Dashboards
-                color: 60 80 50
+                color: 43 50 70
                 links:
                   - title: Watt Usage 
                     url: http://192.168.178.10:3000/d/tasmota-energy/tasmota-plug-power?orgId=1&from=now-24h&to=now&timezone=browser&refresh=5s
@@ -137,43 +122,11 @@ pages:
                     url: http://192.168.178.10:3000/d/rYdddlPWk/node-exporter-full?orgId=1&from=now-24h&to=now&timezone=browser&var-DS_PROMETHEUS=aertuvznphm9sb&var-job=node-exporter&var-nodename=0fa233a88be8&var-node=node-exporter:9100&var-diskdevices=%5Ba-z%5D%2B%7Cnvme%5B0-9%5D%2Bn%5B0-9%5D%2B%7Cmmcblk%5B0-9%5D%2B&refresh=1m
 
               - title: Router Access
-                color: 0 70 50
+                color: 0 75 66
                 links:
                   - title: FRITZ!Box
                     url: https://fritz.box/#
           
-          - type: custom-api
-            title: Smart Plugs
-            url: http://192.168.178.10:3500/status
-            cache: 5s
-            template: |
-              <div style="font-family: sans-serif; font-size: 14px;">
-                {{ $i := 0 }}
-                {{ range .JSON.Array "" }}
-                  {{ if eq (mod $i 3) 0 }}
-                    {{ if ne $i 0 }}</div>{{ end }}
-                    <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-                  {{ end }}
-                  <div style="flex: 1; padding: 8px 12px; border-radius: 8px; background: #1e1e1e;">
-                    <div style="font-weight: bold; font-size: 15px; margin-bottom: 4px;">
-                      <a href="{{ .String "url" }}" target="_blank" style="text-decoration: none; color: #00bfff;">{{ .String "name" }}</a>
-                    </div>
-                    <div style="margin-bottom: 6px;">State: 
-                      <span style="color: {{ if eq (.String "state") "ON" }}#4caf50{{ else }}#f44336{{ end }};">
-                        {{ .String "state" }}
-                      </span>
-                    </div>
-                    <div>
-                      <a href="http://192.168.178.10:3500/toggle?ip={{ .String "ip" }}" target="_blank" style="display: inline-block; padding: 6px 14px; font-weight: bold; border-radius: 16px; text-decoration: none; font-size: 13px; background-color: #444; color: #fff; border: 1px solid #888;">
-                        Toggle
-                      </a>
-                    </div>
-                  </div>
-                  {{ $i = add $i 1 }}
-                {{ end }}
-                </div>
-              </div>
-
       - size: small
         widgets:
           - type: custom-api
@@ -223,29 +176,25 @@ pages:
               </div>
           
           - type: custom-api
-            title: Current watt usage
+            title: Smart Plugs
+            url: http://192.168.178.10:3500/status
             cache: 5s
-            url: "http://192.168.178.10:9090/api/v1/query?query=sum%20by%20(source)(tasmota_status_sns_energy_power%7Bjob%3D%22tasmota%22%2Csource%3D~%22stat/(desk|pc|tv|server|bambu)%22%7D)"
             template: |
-              <div style="font-family: monospace; font-size: 14px; padding: 4px 8px;">
-                <table style="width: 100%;">
-                  {{ range .JSON.Array "data.result" }}
-                    {{ $src := .String "metric.source" }}
-                    {{ $val := .Float "value.1" }}
-                    {{ $label := "" }}
-                    {{ if eq $src "stat/desk" }}{{ $label = "Desk" }}{{ end }}
-                    {{ if eq $src "stat/pc" }}{{ $label = "PC" }}{{ end }}
-                    {{ if eq $src "stat/tv" }}{{ $label = "TV" }}{{ end }}
-                    {{ if eq $src "stat/server" }}{{ $label = "Server" }}{{ end }}
-                    {{ if eq $src "stat/bambu" }}{{ $label = "Bambu" }}{{ end }}
-                    {{ if $label }}
-                      <tr>
-                        <td>{{ $label }}</td>
-                        <td style="text-align: right;" class="color-highlight size-h3">{{ printf "%.0f" $val }} W</td>
-                      </tr>
-                    {{ end }}
-                  {{ end }}
-                </table>
+              <div style="font-family: sans-serif; font-size: 14px;">
+                {{ range .JSON.Array "" }}
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 8px;">
+                    <div style="display: flex; flex-direction: column;">
+                      <a href="{{ .String "url" }}" target="_blank" style="font-size: 15px; text-decoration: none; color: {{ if eq (.String "state") "ON" }}hsl(43, 50%, 70%){{ else }}#f44336{{ end }};">
+                        {{ .String "name" }}
+                      </a>
+                      <span style="font-size: 13px; color: #aaa;">{{ .Int "watt" }} W</span>
+                    </div>
+                    <a href="http://192.168.178.10:3500/toggle?ip={{ .String "ip" }}" target="_blank" style="padding: 4px 10px; font-weight: bold; border-radius: 16px;  text-decoration: none; font-size: 13px; background-color: hsl(240, 8%, 32%); color: #fff;">
+                      Toggle
+                    </a>
+                  </div>
+                {{ end }}
               </div>
+
           
           

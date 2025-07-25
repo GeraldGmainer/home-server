@@ -1,24 +1,28 @@
 {
    "plugs":[
       {
-         "name":"Desk Plug",
+         "name":"Desk",
          "ip":"192.168.178.55"
       },
       {
-         "name":"PC Plug",
+         "name":"PC",
          "ip":"192.168.178.56"
       },
       {
-         "name":"TV Plug",
+         "name":"TV",
          "ip":"192.168.178.57"
       },
       {
-         "name":"Server Plug",
+         "name":"Server",
          "ip":"192.168.178.58"
       },
       {
-         "name":"Bambu Plug",
+         "name":"Bambu",
          "ip":"192.168.178.59"
+      },
+       {
+         "name":"??",
+         "ip":"192.168.178.60"
       }
    ],
    "port":3500

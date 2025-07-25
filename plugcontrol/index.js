@@ -15,18 +15,39 @@ app.get('/status', async (req, res) => {
     console.log("Fetch plug status...")
     const results = await Promise.all(plugs.map(async (plug) => {
       try {
-        const r = await axios.get(`http://${plug.ip}/cm?cmnd=Power`)
-        return { name: plug.name, state: r.data.POWER, url: `http://${plug.ip}/`, ip: plug.ip }
-      } catch {
-        return { name: plug.name, state: 'UNKNOWN', url: `http://${plug.ip}/`, ip: plug.ip }
+        const [powerResp, status8Resp] = await Promise.all([
+          axios.get(`http://${plug.ip}/cm?cmnd=Power`),
+          axios.get(`http://${plug.ip}/cm?cmnd=Status%208`)
+        ])
+
+        const watt = status8Resp.data?.StatusSNS?.ENERGY?.Power || 0
+
+        return {
+          name: plug.name,
+          state: powerResp.data.POWER,
+          url: `http://${plug.ip}/`,
+          ip: plug.ip,
+          watt
+        }
+      } catch (err) {
+        console.warn(`Failed to get data from ${plug.ip}`, err.message)
+        return {
+          name: plug.name,
+          state: 'UNKNOWN',
+          url: `http://${plug.ip}/`,
+          ip: plug.ip,
+          watt: 0
+        }
       }
     }))
     res.json(results)
     console.log("Fetching plug status done")
-  } catch {
+  } catch (err) {
+    console.error("Status endpoint failed", err)
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
+
 
 app.get('/toggle', async (req, res) => {
   const ip = req.query.ip
