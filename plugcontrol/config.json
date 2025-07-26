@@ -1,29 +1,11 @@
 {
-   "plugs":[
-      {
-         "name":"Desk",
-         "ip":"192.168.178.55"
-      },
-      {
-         "name":"PC",
-         "ip":"192.168.178.56"
-      },
-      {
-         "name":"TV",
-         "ip":"192.168.178.57"
-      },
-      {
-         "name":"Server",
-         "ip":"192.168.178.58"
-      },
-      {
-         "name":"Bambu",
-         "ip":"192.168.178.59"
-      },
-       {
-         "name":"??",
-         "ip":"192.168.178.60"
-      }
-   ],
-   "port":3500
+  "port": 3500,
+  "plugs": [
+    { "name": "Desk", "ip": "192.168.178.55", "prom_source": "stat/desk" },
+    { "name": "PC", "ip": "192.168.178.56", "prom_source": "stat/pc" },
+    { "name": "TV", "ip": "192.168.178.57", "prom_source": "stat/tv" },
+    { "name": "Server", "ip": "192.168.178.58", "prom_source": "stat/server" },
+    { "name": "Bambu", "ip": "192.168.178.59", "prom_source": "stat/bambu" },
+    { "name": "??", "ip": "192.168.178.60", "prom_source": "stat/unknown" }
+  ]
 }

@@ -189,7 +189,7 @@ pages:
                       </a>
                       <span style="font-size: 13px; color: #aaa;">{{ .Int "watt" }} W</span>
                     </div>
-                    <a href="http://192.168.178.10:3500/toggle?ip={{ .String "ip" }}" target="_blank" style="padding: 4px 10px; font-weight: bold; border-radius: 16px;  text-decoration: none; font-size: 13px; background-color: hsl(240, 8%, 32%); color: #fff;">
+                    <a href="http://192.168.178.10:3500/toggle?ip={{ .String "ip" }}" target="_blank" style="padding: 4px 10px; font-weight: bold; border-radius: 16px;  text-decoration: none; font-size: 13px; opacity: 0.7; color: rgb(21, 21, 25); background: var(--color-text-highlight);">
                       Toggle
                     </a>
                   </div>

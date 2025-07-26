@@ -13,37 +13,32 @@ app.use(express.urlencoded({ extended: true }))
 app.get('/status', async (req, res) => {
   try {
     console.log("Fetch plug status...")
-    const results = await Promise.all(plugs.map(async (plug) => {
-      try {
-        const [powerResp, status8Resp] = await Promise.all([
-          axios.get(`http://${plug.ip}/cm?cmnd=Power`),
-          axios.get(`http://${plug.ip}/cm?cmnd=Status%208`)
-        ])
 
-        const watt = status8Resp.data?.StatusSNS?.ENERGY?.Power || 0
+    const promQuery = 'tasmota_status_sns_energy_power{job="tasmota"}'
+    const promResp = await axios.get(`http://192.168.178.10:9090/api/v1/query?query=${encodeURIComponent(promQuery)}`)
+    const promResults = promResp.data?.data?.result || []
 
-        return {
-          name: plug.name,
-          state: powerResp.data.POWER,
-          url: `http://${plug.ip}/`,
-          ip: plug.ip,
-          watt
-        }
-      } catch (err) {
-        console.warn(`Failed to get data from ${plug.ip}`, err.message)
-        return {
-          name: plug.name,
-          state: 'UNKNOWN',
-          url: `http://${plug.ip}/`,
-          ip: plug.ip,
-          watt: 0
-        }
+    const wattMap = {}
+    for (const r of promResults) {
+      const source = r.metric.source
+      wattMap[source] = parseFloat(r.value[1])
+    }
+
+    const results = plugs.map((plug) => {
+      const watt = wattMap[plug.prom_source] || 0
+      return {
+        name: plug.name,
+        state: watt > 0 ? 'ON' : 'OFF',
+        url: `http://${plug.ip}/`,
+        ip: plug.ip,
+        watt
       }
-    }))
+    })
+
     res.json(results)
-    console.log("Fetching plug status done")
+    console.log("Fetched plug status from Prometheus")
   } catch (err) {
-    console.error("Status endpoint failed", err)
+    console.error("Prometheus status failed", err)
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
