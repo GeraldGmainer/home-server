@@ -126,6 +126,18 @@ pages:
                 links:
                   - title: FRITZ!Box
                     url: https://fritz.box/#
+
+          - type: repository
+            repository: GeraldGmainer/budget-fusion-app
+            pull-requests-limit: 3
+            issues-limit: 5
+            commits-limit: 5
+          
+          - type: repository
+            repository: GeraldGmainer/budget-fusion-web
+            pull-requests-limit: 3
+            issues-limit: 5
+            commits-limit: 5
           
       - size: small
         widgets:
