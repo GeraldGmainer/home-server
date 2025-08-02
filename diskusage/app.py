@@ -11,7 +11,9 @@ def format_bytes(num):
 
 targets = {
     'root': os.getenv('NVME_PATH', '/'),
-    'immich': os.getenv('SSD_PATH', '/mnt/immich-bulk')
+    'immich': os.getenv('SSD_PATH', '/mnt/immich-bulk'),
+    'nas': '/mnt/media-nas',
+    'backups': '/mnt/backups'
 }
 
 app = Flask(__name__)

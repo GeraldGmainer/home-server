@@ -130,14 +130,20 @@ pages:
           - type: repository
             repository: GeraldGmainer/budget-fusion-app
             pull-requests-limit: 3
-            issues-limit: 5
-            commits-limit: 5
+            issues-limit: 3
+            commits-limit: 3
           
           - type: repository
             repository: GeraldGmainer/budget-fusion-web
             pull-requests-limit: 3
-            issues-limit: 5
-            commits-limit: 5
+            issues-limit: 3
+            commits-limit: 3
+          
+          - type: repository
+            repository: GeraldGmainer/budget-fusion-supabase
+            pull-requests-limit: 3
+            issues-limit: 3
+            commits-limit: 3
           
       - size: small
         widgets:
@@ -160,6 +166,22 @@ pages:
                   <div class="color-highlight size-h3">{{ .JSON.String "immich.used" }} / {{ .JSON.String "immich.total" }} ({{ .JSON.Int "immich.percent" }} %)</div>
                   <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
                     <div style="background: #999; width: {{ .JSON.Int "immich.percent" }}%; height: 8px;"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <strong>Nas</strong><br/>
+                  <div class="color-highlight size-h3">{{ .JSON.String "nas.used" }} / {{ .JSON.String "nas.total" }} ({{ .JSON.Int "nas.percent" }} %)</div>
+                  <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: #999; width: {{ .JSON.Int "nas.percent" }}%; height: 8px;"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <strong>Backups</strong><br/>
+                  <div class="color-highlight size-h3">{{ .JSON.String "backups.used" }} / {{ .JSON.String "backups.total" }} ({{ .JSON.Int "backups.percent" }} %)</div>
+                  <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: #999; width: {{ .JSON.Int "backups.percent" }}%; height: 8px;"></div>
                   </div>
                 </div>
               </div>

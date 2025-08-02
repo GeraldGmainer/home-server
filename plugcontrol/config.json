@@ -6,6 +6,6 @@
     { "name": "TV", "ip": "192.168.178.57", "prom_source": "stat/tv" },
     { "name": "Server", "ip": "192.168.178.58", "prom_source": "stat/server" },
     { "name": "Bambu", "ip": "192.168.178.59", "prom_source": "stat/bambu" },
-    { "name": "??", "ip": "192.168.178.60", "prom_source": "stat/unknown" }
+    { "name": "TP-Link", "ip": "192.168.178.60", "prom_source": "stat/tplink" }
   ]
 }

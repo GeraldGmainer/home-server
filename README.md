@@ -140,5 +140,19 @@ test:
 
 ```
 curl http://192.168.178.10:3500/status
+```
 
+
+## Build diskusage image
+
+build:
+
+```
+docker build -t disk_usage_api ./diskusage
+```
+
+restart with new image
+
+```
+docker compose up -d --force-recreate disk_usage_api
 ```
