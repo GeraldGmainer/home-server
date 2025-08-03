@@ -161,7 +161,7 @@ pages:
                   </div>
                 </div>
 
-                <div>
+                <div style="margin-bottom: 12px;">
                   <strong>Immich</strong><br/>
                   <div class="color-highlight size-h3">{{ .JSON.String "immich.used" }} / {{ .JSON.String "immich.total" }} ({{ .JSON.Int "immich.percent" }} %)</div>
                   <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
@@ -169,11 +169,19 @@ pages:
                   </div>
                 </div>
 
-                <div>
+                <div style="margin-bottom: 12px;">
                   <strong>Nas</strong><br/>
                   <div class="color-highlight size-h3">{{ .JSON.String "nas.used" }} / {{ .JSON.String "nas.total" }} ({{ .JSON.Int "nas.percent" }} %)</div>
                   <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
                     <div style="background: #999; width: {{ .JSON.Int "nas.percent" }}%; height: 8px;"></div>
+                  </div>
+                </div>
+
+                <div style="margin-bottom: 12px;">
+                  <strong>Archive</strong><br/>
+                  <div class="color-highlight size-h3">{{ .JSON.String "archive.used" }} / {{ .JSON.String "archive.total" }} ({{ .JSON.Int "archive.percent" }} %)</div>
+                  <div style="background: #333; width: 100%; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: #999; width: {{ .JSON.Int "archive.percent" }}%; height: 8px;"></div>
                   </div>
                 </div>
 

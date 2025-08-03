@@ -12,7 +12,8 @@ def format_bytes(num):
 targets = {
     'root': os.getenv('NVME_PATH', '/'),
     'immich': os.getenv('SSD_PATH', '/mnt/immich-bulk'),
-    'nas': '/mnt/media-nas',
+    'nas': '/mnt/nas',
+    'archive': '/mnt/archive',
     'backups': '/mnt/backups'
 }
 

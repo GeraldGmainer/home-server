@@ -332,8 +332,9 @@ services:
     volumes:
       - /:/mnt/root:ro
       - /mnt/immich-bulk:/mnt/immich-bulk:ro
-      - /mnt/media-nas:/mnt/media-nas:ro
+      - /mnt/nas:/mnt/nas:ro
       - /mnt/backups:/mnt/backups:ro
+      - /mnt/archive:/mnt/archive:ro
     ports:
       - "8000:8000"
   
@@ -365,11 +366,12 @@ services:
       USERID: 1000
       GROUPID: 1000
     volumes:
-      - /mnt/media-nas:/mnt/media-nas
+      - /mnt/nas:/mnt/nas
       - /mnt/backups:/mnt/backups
+      - /mnt/archive:/mnt/archive
     command: >
-      -s "nas;/mnt/media-nas/nas;yes;no;no;all"
-      -s "archive;/mnt/media-nas/archive;yes;no;no;all"
+      -s "nas;/mnt/nas;yes;no;no;all"
+      -s "archive;/mnt/archive;yes;no;no;all"
       -s "backups;/mnt/backups;yes;no;no;all"
       -u "${SAMBA_USER};${SAMBA_PASSWORD}"
 
