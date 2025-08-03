@@ -138,7 +138,9 @@ services:
       - "8082:80"
     volumes:
       - nextcloud_data:/var/www/html
-      - /mnt/media-nas/nas:/media/nas
+      - /mnt/nas:/media/nas
+      - /mnt/archive:/media/archive
+      - /mnt/backups:/media/backups
     environment:
       - MYSQL_HOST=nextcloud_db
       - MYSQL_DATABASE=nextcloud
