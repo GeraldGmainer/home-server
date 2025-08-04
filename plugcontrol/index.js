@@ -14,18 +14,30 @@ app.get('/status', async (req, res) => {
   try {
     console.log("Fetch plug status...")
 
-    const promQuery = 'tasmota_status_sns_energy_power{job="tasmota"}'
-    const promResp = await axios.get(`http://192.168.178.10:9090/api/v1/query?query=${encodeURIComponent(promQuery)}`)
-    const promResults = promResp.data?.data?.result || []
+    // const promQuery = 'tasmota_status_sns_energy_power{job="tasmota"}'
+    // const promResp = await axios.get(`http://192.168.178.10:9090/api/v1/query?query=${encodeURIComponent(promQuery)}`)
+    // const promResults = promResp.data?.data?.result || []
 
-    const wattMap = {}
-    for (const r of promResults) {
-      const source = r.metric.source
-      wattMap[source] = parseFloat(r.value[1])
-    }
+    // const wattMap = {}
+    // for (const r of promResults) {
+    //   const source = r.metric.source
+    //   wattMap[source] = parseFloat(r.value[1])
+    // }
 
-    const results = plugs.map((plug) => {
-      const watt = wattMap[plug.prom_source] || 0
+    // const results = plugs.map((plug) => {
+    //   const watt = wattMap[plug.prom_source] || 0
+    //   return {
+    //     name: plug.name,
+    //     state: watt > 0 ? 'ON' : 'OFF',
+    //     url: `http://${plug.ip}/`,
+    //     ip: plug.ip,
+    //     watt
+    //   }
+    // })
+    const results = await Promise.all(plugs.map(async (plug) => {
+    try {
+      const resp = await axios.get(`http://${plug.ip}/cm?cmnd=Status%208`, { timeout: 1000 })
+      const watt = resp.data?.StatusSNS?.ENERGY?.Power || 0
       return {
         name: plug.name,
         state: watt > 0 ? 'ON' : 'OFF',
@@ -33,7 +45,17 @@ app.get('/status', async (req, res) => {
         ip: plug.ip,
         watt
       }
-    })
+    } catch (err) {
+      return {
+        name: plug.name,
+        state: 'OFFLINE',
+        url: `http://${plug.ip}/`,
+        ip: plug.ip,
+        watt: 0
+      }
+    }
+}))
+res.json(results)
 
     res.json(results)
     console.log("Fetched plug status from Prometheus")
